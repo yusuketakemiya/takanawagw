@@ -1,0 +1,6 @@
+#touch_area {
+    width: 100vw;
+    height: 100vh;
+    opacity: 1;    /* カラーフィルタ効果の度合いを指定 */
+    position: absolute;
+}
