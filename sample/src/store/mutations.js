@@ -7,19 +7,19 @@
 
 export default {
   updateMessageTitle (state, title) {
-    state.station.title = title
+    state.station.title.text = title
   },
   updateMessageSubTitle (state, subtitle) {
-    state.station.subTitle = subtitle
+    state.station.subTitle.text = subtitle
   },
   updateMessageEnglishTitle (state, englishtitle) {
-    state.station.englishTitle = englishtitle
+    state.station.englishTitle.text = englishtitle
+  },
+  updateWindowSize (state, size) {
+    state.window.width = size.width
+    state.window.height = size.height
+
+    state.station.image.style.width = size.width + 'px'
+    state.station.image.style.height = size.height + 'px'
   }
-  // removeTodo (state, todo) {
-  //   state.todos.splice(state.todos.indexOf(todo), 1)
-  // },
-  // editTodo (state, { todo, text = todo.text, done = todo.done }) {
-  //   todo.text = text
-  //   todo.done = done
-  // }
 }

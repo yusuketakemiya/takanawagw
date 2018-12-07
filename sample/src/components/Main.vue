@@ -1,16 +1,22 @@
 <template>
-  <div class="main" v-bind:style="{ 'background-image': 'url(' + image + ')' }">
+  <!-- <div class="main" v-bind:style="{ 'background-image': 'url(' + image + ')' }"> -->
+  <div class="main">
     <div id="edit" ref="edit">
-      <input id="title" v-model="stationTitle" />
-      <input id="subTitle"  v-model="stationSubTitle" />
-      <input id="englishTitle" v-model="stationEnglishTitle" />
-      <label id="title">{{stationTitle}}</label>
-      <label id="subTitle">{{stationSubTitle}}</label>
-      <label id="englishTitle">{{stationEnglishTitle}}</label>
+      <img id="image" :src="image" v-bind:style="imageStyle"/>
+      <input id="title" v-model="stationTitle" v-bind:style="titleStyle" />
+      <input id="subTitle"  v-model="stationSubTitle" v-bind:style="subTitleStyle" />
+      <input id="englishTitle" v-model="stationEnglishTitle" v-bind:style="englishTitleStyle" />
+      <label id="title" v-bind:style="titleStyle" >{{stationTitle}}</label>
+      <label id="subTitle" v-bind:style="subTitleStyle">{{stationSubTitle}}</label>
+      <label id="englishTitle" v-bind:style="englishTitleStyle">{{stationEnglishTitle}}</label>
     </div>
     <div id="container">
       <button @click="print">print</button>
-      <img :src="output">
+      <br/>
+      <label id="width">{{width}}</label>
+      <br/>
+      <label id="height">{{height}}</label>
+      <!-- <img :src="output"> -->
     </div>
   </div>
 </template>
@@ -21,15 +27,15 @@ import store from '../store'
 export default {
   name: 'Main',
   data () {
+    this.handleResize()
     return {
-      image: store.state.station.image,
-      output: null
+      image: store.state.station.image.src
     }
   },
   computed: {
     stationTitle: {
       get () {
-        return store.state.station.title
+        return store.state.station.title.text
       },
       set (value) {
         store.commit('updateMessageTitle', value)
@@ -37,7 +43,7 @@ export default {
     },
     stationSubTitle: {
       get () {
-        return store.state.station.subTitle
+        return store.state.station.subTitle.text
       },
       set (value) {
         store.commit('updateMessageSubTitle', value)
@@ -45,25 +51,48 @@ export default {
     },
     stationEnglishTitle: {
       get () {
-        return store.state.station.englishTitle
+        return store.state.station.englishTitle.text
       },
       set (value) {
         store.commit('updateMessageEnglishTitle', value)
+      }
+    },
+    width: {
+      get () {
+        return store.state.window.width
+      }
+    },
+    height: {
+      get () {
+        return store.state.window.height
+      }
+    },
+    imageStyle: {
+      get () {
+        return store.state.station.image.style
+      }
+    },
+    titleStyle: {
+      get () {
+        return store.state.station.title.style
+      }
+    },
+    subTitleStyle: {
+      get () {
+        return store.state.station.subTitle.style
+      }
+    },
+    englishTitleStyle: {
+      get () {
+        return store.state.station.englishTitle.style
       }
     }
   },
   methods: {
     print () {
-      // const el = this.$refs.edit
-      // const el = document.querySelector('#edit')
-      const el = document.body
-      // alert(this.$refs.edi)
+      const el = document.querySelector('#edit')
       this.$html2canvas(el).then(canvas => {
-        // alert(canvas)
         let imageData = canvas.toDataURL('image/png')
-        // alert(imageData)
-        this.output = imageData
-        // document.querySelector('#container').appendChild(canvas)
 
         var a = document.createElement('a')
         a.href = imageData
@@ -72,31 +101,47 @@ export default {
         a.click()
         document.body.removeChild(a)
       })
+    },
+    handleResize () {
+      let width = window.innerWidth
+      let height = window.innerHeight
+      store.commit('updateWindowSize', { width, height })
     }
+  },
+  mounted: function () {
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>
 
 <style scoped>
-canvas {
-  width: 100px;
-  height: 100px;;
+#image {
+  z-index: -1;
+  /* width: 100%;
+  height: 100%; */
 }
 #container {
+  position: absolute;
   top: 90%;
 }
 .main {
+  position: relative;
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
   background-size: contain;
 }
 input {
+  position: absolute;
   opacity: 0;
   font-weight: bold;
   text-align: center;
 }
 label {
+  position: absolute;
   opacity: 1;
   font-weight: bold;
   text-align: center;
@@ -110,21 +155,21 @@ label:hover {
   z-index: -1;
 }
 #title {
-  top: 20%;
-  left: 15%;
+  /* top: 20%;
+  left: 15%; */
   font-size: 60px;
-  width: 68%;
+  /* width: 68%; */
 }
 #subTitle {
-  top: 31%;
-  left: 30%;
+  /* top: 31%;
+  left: 30%; */
   font-size: 30px;
-  width: 45%;
+  /* width: 45%; */
 }
 #englishTitle {
-  top: 52%;
-  left: 32%;
+  /* top: 52%;
+  left: 32%; */
   font-size: 32px;
-  width: 45%;
+  /* width: 45%; */
 }
 </style>
