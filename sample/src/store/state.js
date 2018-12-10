@@ -3,7 +3,7 @@ export default {
     title: {
       text: '高輪ゲートウェイ',
       style: {
-        top: '20%',
+        top: '17%',
         left: '15%',
         width: '68%'
       }
@@ -12,7 +12,7 @@ export default {
       text: 'たかなわげーとうぇい',
       style: {
         top: '31%',
-        left: '30%',
+        left: '28%',
         width: '45%'
       }
     },
@@ -20,7 +20,7 @@ export default {
       text: 'Takanawa Gateway',
       style: {
         top: '52%',
-        left: '32%',
+        left: '28%',
         width: '45%'
       }
     },
@@ -29,8 +29,10 @@ export default {
       style: {
         top: '0px',
         left: '0px',
-        width: '100px',
-        height: '100px'
+        display: 'inline-block',
+        margin: '0px',
+        width: '1200px',
+        height: 'auto'
       }
     }
   },

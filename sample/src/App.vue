@@ -22,5 +22,6 @@ export default {
   height: 100vh;
   top: 0px;
   position: absolute;
+  background-color: #ccc;
 }
 </style>

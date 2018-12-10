@@ -19,7 +19,7 @@ export default {
     state.window.width = size.width
     state.window.height = size.height
 
-    state.station.image.style.width = size.width + 'px'
-    state.station.image.style.height = size.height + 'px'
+    // state.station.image.style.width = size.width + 'px'
+    // state.station.image.style.height = size.height + 'px'
   }
 }

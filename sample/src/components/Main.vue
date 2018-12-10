@@ -107,21 +107,23 @@ export default {
       let height = window.innerHeight
       store.commit('updateWindowSize', { width, height })
     }
-  },
-  mounted: function () {
-    window.addEventListener('resize', this.handleResize)
-  },
-  beforeDestroy: function () {
-    window.removeEventListener('resize', this.handleResize)
   }
+  // mounted: function () {
+  //   window.addEventListener('resize', this.handleResize)
+  // }
+  // beforeDestroy: function () {
+  //   window.removeEventListener('resize', this.handleResize)
+  // }
 }
 </script>
 
 <style scoped>
 #image {
   z-index: -1;
-  /* width: 100%;
-  height: 100%; */
+  background-size: contain;
+  background-color: #ccc;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 #container {
   position: absolute;
@@ -155,21 +157,12 @@ label:hover {
   z-index: -1;
 }
 #title {
-  /* top: 20%;
-  left: 15%; */
   font-size: 60px;
-  /* width: 68%; */
 }
 #subTitle {
-  /* top: 31%;
-  left: 30%; */
   font-size: 30px;
-  /* width: 45%; */
 }
 #englishTitle {
-  /* top: 52%;
-  left: 32%; */
   font-size: 32px;
-  /* width: 45%; */
 }
 </style>
