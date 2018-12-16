@@ -1,73 +1,41 @@
 import os
+from models.Consumer import Consumer
+from models.Oauth import Oauth
 from twitter import *
 
-class ManageTwitter:
-    def parse_oauth_tokens(self, result):
-        for r in result.split('&'):
-            k, v = r.split('=')
-            if k == 'oauth_token':
-                oauth_token = v
-            elif k == 'oauth_token_secret':
-                oauth_token_secret = v
-        return oauth_token, oauth_token_secret
-    
+class TwitterService:
+    def __init__(self, consumer :Consumer, oauth :Oauth):
+        self.Consumer = consumer
+        self.Oauth = oauth
+
     def get_twitter(self):
         return self.hidden_twitter
     def set_twitter(self, settwitter):
         self.hidden_twitter = settwitter
 
     twitter = property(get_twitter, set_twitter)
-    # CONSUMER_KEY = "vctSOz4G69frlc3Gb0w3oARKs"
-    # CONSUMER_SECRET="vOIcxftGqdsETC47M1YNGx7IEgeNdlENjia5uLj4YW8aQQ5hUJ"
-    CONSUMER_KEY = "HwYPqzZgCHEG8sUMkXr1111gg"
-    CONSUMER_SECRET="iZPKHqXN7OubTeofDEZIW4Xh30Nbn9aNILtCns5tbkdgr4CuXv"
-    OAUTH_TOKEN = None
-    OAUTH_SECRET = None
-    
-    def oauthurl(self):
-        print("oauthurl call")
+
+    def oauth(self):
+        print("oauth call")
         twitter = Twitter(
-            auth=OAuth('', '', self.CONSUMER_KEY, self.CONSUMER_SECRET),
+            auth = OAuth('', '', self.Consumer.Key, self.Consumer.Secret),
             format='', api_version=None)
         request = twitter.oauth.request_token()
-        self.OAUTH_TOKEN, self.OAUTH_SECRET = self.parse_oauth_tokens(request)
-        oauth_url = ('https://api.twitter.com/oauth/authorize?oauth_token=' +
-            self.OAUTH_TOKEN)
-        return oauth_url
+        self.Oauth.Fill(request)
+        return self.Oauth
 
-    def oauthverifier(self, oauth_verifier):
-        if self.OAUTH_TOKEN is None:
-            return None
-        if self.OAUTH_SECRET is None:
-            return None
+    def oauth_verifier(self, oauth_verifier):
         twitter = Twitter(
             auth=OAuth(
-                self.OAUTH_TOKEN,
-                self.OAUTH_SECRET,
-                self.CONSUMER_KEY,
-                self.CONSUMER_SECRET),
+                self.Oauth.Token,
+                self.Oauth.Secret,
+                self.Consumer.Key,
+                self.Consumer.Secret),
             format='',
             api_version=None)
         request = twitter.oauth.access_token(oauth_verifier=oauth_verifier)
-        self.OAUTH_TOKEN, self.OAUTH_SECRET = self.parse_oauth_tokens(
-            request)
-
-    def load(self):
-        print("トークンロード")
-        if self.OAUTH_TOKEN is None:
-            self.OAUTH_TOKEN, self.OAUTH_SECRET = oauth_dance("TweetStamp", 
-            self.CONSUMER_KEY, 
-            self.CONSUMER_SECRET,
-            open_browser=False)
-
-    def oauth(self):
-        self.twitter = Twitter(
-        auth=OAuth(
-            self.OAUTH_TOKEN, 
-            self.OAUTH_SECRET, 
-            self.CONSUMER_KEY, 
-            self.CONSUMER_SECRET))
-        
+        self.Oauth.Fill(request)
+    
     def home_alltimeline(self):
         tweets = self.twitter.statuses.home_timeline()
         self.__wrighttweet(tweets)
@@ -104,24 +72,19 @@ class ManageTwitter:
             owner_screen_name=owner_screen_name, 
             slug=slug)
         print(lists)
-    
-    # def users(self):
-    #     users = self.twitter.users.lookup(
-    #         screen_name=','.join(A_LIST_OF_100_SCREEN_NAMES), _timeout=1)
-    #     print(users)
 
     def imageupload(self, message, imagelist):
         t_upload = Twitter(domain='upload.twitter.com',
-        auth=OAuth(
-            self.OAUTH_TOKEN,
-            self.OAUTH_SECRET,
-            self.CONSUMER_KEY,
-            self.CONSUMER_SECRET))
+            auth=OAuth(
+                self.Oauth.Token, 
+                self.Oauth.Secret, 
+                self.Consumer.Key, 
+                self.Consumer.Secret))
         id_imgs = []
         for imagedata in imagelist:
             id_imgs.append(
                 t_upload.media.upload(media=imagedata)["media_id_string"])
-
+        
         self.twitter.statuses.update(status=message, media_ids=",".join(id_imgs))
 
 # twitter = ManageTwitter()

@@ -14,14 +14,13 @@
 
 # [START gae_python37_app]
 from flask import Flask
-from models import TwitterModel
+import TwitterService
+from models import Consumer, Oauth
 import json
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
-
-twittermodel = TwitterModel()
 
 # @app.route('/login', methods=['GET', 'POST'])
 @app.route('/')
@@ -32,11 +31,13 @@ def hello():
 # localhost:8080/twitteroauthurl
 @app.route('/twitteroauthurl', methods=['GET'])
 def twitteroauthurl():
+    twitter = TwitterService() # コンストラクタでトークンセット
     print('twitteroauthurl call')
-    url = twittermodel.oauth_url()
-    print('twitteroauthurl return:' + url)
+    oauth = twitter.oauth()
+    print('twitteroauthurl return:' + oauth.Url)
     json_obj = {}
-    json_obj["url"] = url
+    # json_obj["url"] = oauth.Url
+    json_obj["oauth"] = oauth
     response = json.dumps(json_obj, ensure_ascii=False)
     result = app.response_class(
         response=response,
@@ -52,9 +53,11 @@ def twittercallback():
     # GETパラメータの取得(oauth_token, oauth_verifier)
     print("oauth_token:" + request.query.oauth_token)
     print("oauth_verifier:" + request.query.oauth_verifier)
-    oauth_token = request.query.oauth_token
-    oauth_verifier = request.query.oauth_verifier
-    return twittermodel.oaut_token(oauth_verifier)
+    # oauth_token = request.query.oauth_token
+    # oauth_verifier = request.query.oauth_verifier
+    # return twittermodel.oaut_token(oauth_verifier)
+    twitter = TwitterService() # コンストラクタでトークンセット
+    return twitter.oauth_verifier(request.query.oauth_verifier)
 
 
 if __name__ == '__main__':
